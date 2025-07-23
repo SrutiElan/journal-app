@@ -1,0 +1,30 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Entry {
+  id        Int      @id @default(autoincrement())
+  userId    String   // Supabase Auth UUID
+  text      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  moodScore Int?
+  tags      String[]
+  images    Image[]
+  
+  @@map("entries")
+}
+
+model Image {
+  id      Int    @id @default(autoincrement())
+  entry   Entry  @relation(fields: [entryId], references: [id], onDelete: Cascade)
+  entryId Int
+  url     String
+  
+  @@map("images")
+}
