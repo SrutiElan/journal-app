@@ -6,6 +6,7 @@ import { mockEntries } from "@/lib/mock-data"
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts"
 
 export default function EmotionChart() {
+  
   const [timeRange, setTimeRange] = useState("month")
 
   // Count emotions across all entries

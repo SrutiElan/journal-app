@@ -8,23 +8,29 @@ datasource db {
 }
 
 model Entry {
-  id        Int      @id @default(autoincrement())
-  userId    String   // Supabase Auth UUID
-  text      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  moodScore Int?
-  tags      String[]
-  images    Image[]
-  
+  id          Int      @id @default(autoincrement())
+  userId      String   @map("user_id") @db.Uuid
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  moodScore   Int?     @map("mood_score")
+  tags        String[]
+  categories  String[] @default([])
+  challenges  Json?
+  contentHtml String   @map("content_html")
+  emotions    String[] @default([])
+  people      Json?
+  song        Json?
+  title       String?
+  images      Image[]
+
   @@map("entries")
 }
 
 model Image {
   id      Int    @id @default(autoincrement())
-  entry   Entry  @relation(fields: [entryId], references: [id], onDelete: Cascade)
-  entryId Int
+  entryId Int    @map("entry_id")
   url     String
-  
+  entries Entry  @relation(fields: [entryId], references: [id], onDelete: Cascade, map: "images_entryId_fkey")
+
   @@map("images")
 }

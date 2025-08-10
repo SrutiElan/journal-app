@@ -22,7 +22,7 @@ export default function EntryPage() {
     const foundEntry = mockEntries.find((e) => e.id === id)
     if (foundEntry) {
       setEntry(foundEntry)
-      setReflection(foundEntry.reflection || "")
+      //setReflection(foundEntry.reflection || "")
     }
   }, [id])
 
@@ -89,7 +89,7 @@ export default function EntryPage() {
       )}
 
       <div className="prose dark:prose-invert max-w-none mb-8">
-        <div dangerouslySetInnerHTML={{ __html: entry.content }} />
+        <div dangerouslySetInnerHTML={{ __html: entry.contentHtml }} />
       </div>
 
       {entry.people && entry.people.length > 0 && (
@@ -146,7 +146,7 @@ export default function EntryPage() {
             <div className="grid grid-cols-2 gap-4">
               <div className="p-4 border rounded-md">
                 <div className="text-sm text-muted-foreground">Word Count</div>
-                <div className="text-2xl font-bold">{entry.content.split(" ").length}</div>
+                <div className="text-2xl font-bold">{entry.contentHtml.split(" ").length}</div>
               </div>
               <div className="p-4 border rounded-md">
                 <div className="text-sm text-muted-foreground">People Mentioned</div>

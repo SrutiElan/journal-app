@@ -1,6 +1,7 @@
 import type React from "react"
 import "@/app/globals.css"
 // import { ThemeProvider } from "@/components/theme-provider"
+import { ThemeProvider } from "next-themes"
 import { Inter } from "next/font/google"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -17,7 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        {/* <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange> */}
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange> 
           <div className="min-h-screen flex flex-col">
             <header className="border-b">
               <div className="container mx-auto flex h-16 items-center justify-between px-4">
@@ -63,7 +64,7 @@ export default function RootLayout({
               </div>
             </div>
           </div>
-        {/* </ThemeProvider> */}
+        </ThemeProvider>
       </body>
     </html>
   )
