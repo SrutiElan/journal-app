@@ -81,7 +81,7 @@ export async function createEntry(formData: FormData) {
 export async function getEntries(limit?: number): Promise<EntryWithImages[]> {
   const supabase = await createClient()
   const { data: { user }, error: authError } = await supabase.auth.getUser()
-  
+  // if user is not authenticated, return empty array
   if (authError || !user) {
     return []
   }
@@ -108,7 +108,7 @@ export async function getEntries(limit?: number): Promise<EntryWithImages[]> {
 }
 
 export async function getEntry(id: number): Promise<EntryWithImages | null> {
-  const supabase = await createClient()
+  const supabase = await createClient() // Who is authenticated user?
   const { data: { user }, error: authError } = await supabase.auth.getUser()
   
   if (authError || !user) {
