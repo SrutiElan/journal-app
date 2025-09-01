@@ -178,7 +178,7 @@ export default function EntryPage() {
             </>
           ) : (
             <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" onClick={handleDelete}>
+            <Button variant="secondary" size="sm" onClick={handleDelete}>
               <Trash2 className="h-4 w-4 mr-2" /> Delete Entry
             </Button>
             <Button variant="outline" size="sm" onClick={handleEditToggle}>

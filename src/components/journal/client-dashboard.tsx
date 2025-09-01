@@ -77,7 +77,7 @@ export function ClientDashboard({ entries, categories, emotions }: ClientDashboa
         {filteredEntries.length > 0 ? (
           filteredEntries.map((entry) => (
             <Link href={`/journal/entry/${entry.id}`} key={entry.id}>
-              <Card className="hover:bg-muted/50 transition-colors cursor-pointer">
+              <Card className="hover:bg-muted/50 transition-colors cursor-pointer mb-3">
                 <CardHeader className="pb-2">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
