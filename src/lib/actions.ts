@@ -19,6 +19,7 @@ export type EntryWithImages = {
   moodScore: number | null
   createdAt: Date
   updatedAt: Date
+  //reflection: string
   images: {
     id: number
     url: string
@@ -46,6 +47,8 @@ export async function createEntry(formData: FormData) {
     const song = JSON.parse(formData.get('song') as string || 'null')
     const challenges = JSON.parse(formData.get('challenges') as string || 'null')
     const moodScore = parseInt(formData.get('moodScore') as string) || null
+    //const reflection = formData.get('reflection') as string
+
 
     // Create entry with Prisma
     const entry = await prisma.entry.create({
@@ -60,6 +63,7 @@ export async function createEntry(formData: FormData) {
         song,
         challenges,
         moodScore,
+        //reflection,
       },
       include: {
         images: true // Include related images
@@ -70,7 +74,9 @@ export async function createEntry(formData: FormData) {
     revalidatePath('/journal')
     
     // Redirect to the new entry
-    redirect(`/journal/entry/${entry.id}`)
+    return entry.id
+
+
   } catch (error) {
     console.error('Error creating entry:', error)
     throw new Error('Failed to create entry')
@@ -213,7 +219,6 @@ export async function deleteEntry(id: number) {
     })
 
     revalidatePath('/journal')
-    redirect('/journal')
   } catch (error) {
     console.error('Error deleting entry:', error)
     throw new Error('Failed to delete entry')

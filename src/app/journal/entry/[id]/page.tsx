@@ -4,13 +4,13 @@ import { useParams, useRouter } from "next/navigation"
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { ArrowLeft, Calendar, Edit, Save, X } from "lucide-react"
+import { ArrowLeft, Calendar, Edit, Save, Trash2, X } from "lucide-react"
 import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
-import { EntryWithImages } from "@/lib/actions"
-
+import { deleteEntry, EntryWithImages } from "@/lib/actions"
+import { updateEntry, getEntry } from "@/lib/actions"
 // // Props interface - this is what we'd receive if using props instead of useParams
 // interface EntryPageProps {
 //   params: { id: string }
@@ -38,19 +38,11 @@ export default function EntryPage() {
         setLoading(true)
         setError(null)
         
-        // Call our server action via a route handler
-        // We can't call server actions directly from client components
-        const response = await fetch(`/api/entries/${id}`)
-        
-        if (!response.ok) {
-          throw new Error(`Failed to fetch entry: ${response.statusText}`)
-        }
-        
-        const entryData = await response.json()
+        const entryData = await getEntry(Number(id))
         
         if (entryData) {
           setEntry(entryData)
-          setReflection(entryData.reflection || "")
+          setReflection("")
           setEditedContent(entryData.contentHtml || "")
           setEditedTitle(entryData.title || "")
         } else {
@@ -77,6 +69,12 @@ export default function EntryPage() {
     setIsEditing(!isEditing)
   }
 
+  const handleDelete = () => {
+    deleteEntry(Number(id))
+   router.push('/journal')
+
+  }
+
   // Handle save functionality
   const handleSave = async () => {
     if (!entry || !id) return
@@ -85,7 +83,6 @@ export default function EntryPage() {
       const formData = new FormData()
       formData.append('title', editedTitle)
       formData.append('contentHtml', editedContent)
-      // Keep existing data for other fields
       formData.append('tags', JSON.stringify(entry.tags))
       formData.append('categories', JSON.stringify(entry.categories))
       formData.append('emotions', JSON.stringify(entry.emotions))
@@ -95,15 +92,7 @@ export default function EntryPage() {
       if (entry.moodScore) {
         formData.append('moodScore', entry.moodScore.toString())
       }
-
-      const response = await fetch(`/api/entries/${id}`, {
-        method: 'PUT',
-        body: formData
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to update entry')
-      }
+     updateEntry( Number(id), formData)
 
       // Update local state with saved data
       setEntry(prev => prev ? {
@@ -188,9 +177,15 @@ export default function EntryPage() {
               </Button>
             </>
           ) : (
+            <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm" onClick={handleDelete}>
+              <Trash2 className="h-4 w-4 mr-2" /> Delete Entry
+            </Button>
             <Button variant="outline" size="sm" onClick={handleEditToggle}>
               <Edit className="h-4 w-4 mr-2" /> Edit Entry
             </Button>
+
+            </div>
           )}
         </div>
       </div>

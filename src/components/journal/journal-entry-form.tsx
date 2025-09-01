@@ -14,6 +14,8 @@ import { Separator } from "@/components/ui/separator"
 import SpotifySearch from "@/components/journal/spotify-search"
 import RichTextEditor from "@/components/journal/rich-text-editor"
 import ImageUploader from "@/components/journal/image-uploader"
+import { createEntry } from "@/lib/actions"
+import { useRouter } from "next/navigation"
 
 const categories = ["Family", "Relationships", "Self", "Career", "State of the world", "Slice of life", "Adventures"]
 
@@ -22,6 +24,7 @@ const emotions = ["Optimistic", "Sad", "Profound", "Excited", "Anxious", "Gratef
 const challenges = ["Daily Skateboarding", "Rejection Therapy"]
 
 export default function JournalEntryForm() {
+  const router = useRouter()
   const [date, setDate] = useState<Date>(new Date())
   const [title, setTitle] = useState("")
   const [content, setContent] = useState("")
@@ -76,12 +79,36 @@ export default function JournalEntryForm() {
       setSelectedEmotions([...selectedEmotions, emotion])
     }
   }
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    // Handle form submission logic here
+    try {
+      const formData = new FormData()
+      formData.append('title', title)
+      formData.append('contentHtml', content)
+      //formData.append('tags', JSON.stringify(tags))
+      formData.append('categories', JSON.stringify(selectedCategories))
+      formData.append('emotions', JSON.stringify(selectedEmotions))
+      formData.append('people', JSON.stringify(people))
+      formData.append('song', JSON.stringify(selectedSong))
+      formData.append('challenges', JSON.stringify(challengeProgress))
+      // if (moodScore) {
+      //   formData.append('moodScore', entry.moodScore.toString())
+      // }
+
+      const id = await createEntry(formData)
+      router.push(`/journal/entry/${id}`)
+    }
+    catch (error) {
+      console.error("Error submitting form:", error)
+    }
+  }
 
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold">New Journal Entry</h1>
-        <Button>Save Entry</Button>
+        <Button onClick={handleSubmit}>Save Entry</Button>
       </div>
 
       <div className="flex items-center gap-4">
